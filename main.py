@@ -54,6 +54,13 @@ def printPDF(path):
     WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "ID_OK_P_PRI_SET"))).click()
 
 
+def convertToPDF(path):
+    err = system("lowriter --convert-to pdf " + path + " --outdir " + os.path.dirname(path))
+    if err != 0:
+        print("Error while converting to PDF")
+        return
+    os.remove(path)
+
 if __name__ == '__main__':
     x = threading.Thread(target=forward)
     x.start()
@@ -64,11 +71,18 @@ if __name__ == '__main__':
 
     while True:
         for elem in os.listdir(printpath):
-            try:
-                fullpath = os.path.join(printpath, elem)
-                printPDF(fullpath)
-                os.remove(fullpath)
-            except Exception as e:
-                print(e)
+            if elem.endswith(".odt") or elem.endswith(".docx") or elem.endswith(".doc") or elem.endswith(".rtf") or elem.endswith(".txt"):
+                convertToPDF(os.path.join(printpath, elem))
+            elif elem.endswith(".pdf"):
+                try:
+                    fullpath = os.path.join(printpath, elem)
+                    printPDF(fullpath)
+                    os.remove(fullpath)
+                except Exception as e:
+                    print(e)
+            else:
+                print("Unknown file type: " + elem)
 
         sleep(1)
+
+
