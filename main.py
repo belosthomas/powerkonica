@@ -9,7 +9,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pathlib import Path
-from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 def forward():
     system("ssh -N -L 127.0.0.1:4433:172.30.129.131:443 belosth@imagine2.enpc.fr")
@@ -17,7 +18,11 @@ def forward():
 def printPDF(path):
     print("Printing " + path)
 
-    driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--ignore-certificate-errors")
+
+    driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
 
     print("Loading page...")
     driver.get("https://127.0.0.1:4433/wcd/spa_login.html")
@@ -59,14 +64,11 @@ if __name__ == '__main__':
 
     while True:
         for elem in os.listdir(printpath):
-            if True:
-            #try:
+            try:
                 fullpath = os.path.join(printpath, elem)
                 printPDF(fullpath)
                 os.remove(fullpath)
-            #except Exception as e:
-            #    print(e)
+            except Exception as e:
+                print(e)
 
         sleep(1)
-
-
