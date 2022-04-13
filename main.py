@@ -12,10 +12,21 @@ from pathlib import Path
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
-def forward():
-    system("ssh -N -L 127.0.0.1:4433:172.30.129.131:443 belosth@imagine2.enpc.fr")
+
+KONICA_IP = "172.30.129.131:443"
+
+def forward(username):
+    global KONICA_IP
+
+    KONICA_IP_bak = KONICA_IP
+    KONICA_IP = "127.0.0.1:4433"
+    system("ssh -N -L %s:%s %s@imagine2.enpc.fr" % (KONICA_IP_bak, KONICA_IP, username))
+    print("Unable to forward. The script will only work when connected to eduroam or ENPC-PRO...")
+    KONICA_IP = KONICA_IP_bak
 
 def printPDF(path):
+    global KONICA_IP
+
     print("Printing " + path)
 
     chrome_options = Options()
@@ -25,7 +36,7 @@ def printPDF(path):
     driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
 
     print("Loading page...")
-    driver.get("https://127.0.0.1:4433/wcd/spa_login.html")
+    driver.get("https://" + KONICA_IP + "/wcd/spa_login.html")
 
     print("Waiting for login page...")
     WebDriverWait(driver, 30).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "SPA-contents-body")))
@@ -62,7 +73,8 @@ def convertToPDF(path):
     os.remove(path)
 
 if __name__ == '__main__':
-    x = threading.Thread(target=forward)
+    username = input("Imagine2 Username: ")
+    x = threading.Thread(target=forward, args=(username,))
     x.start()
 
     printpath = os.path.join(Path.home(), "autoprint")
