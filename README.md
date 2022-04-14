@@ -9,3 +9,6 @@ python3 main.py
 
 Drag and drop any PDF file to YOUR_HOME/autoprint/ to print it.
 
+## Demo
+
+https://youtu.be/FJhpWJa8LBg
