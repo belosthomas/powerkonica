@@ -1,7 +1,11 @@
-# powerkonica
+# PowerKonica
 
-TODO List : 
- - When IP forwarding gives error, use true IP address of the printer
- - Hide the browser
- - Make a right click button
- - Convert any file to PDF
+## Usage
+
+```bash
+pip3 install -r requirements.txt
+python3 main.py
+```
+
+Drag and drop any PDF file to YOUR_HOME/autoprint/ to print it.
+
