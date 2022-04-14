@@ -51,7 +51,7 @@ def printPDF(path):
     print("Waiting for home page...")
     WebDriverWait(driver, 30).until(EC.url_changes("https://127.0.0.1:4433/wcd/spa_main.html"))
     sleep(10)
-    driver.get("https://127.0.0.1:4433/wcd/spa_main.html")
+    driver.get("https://" + KONICA_IP + "/wcd/spa_main.html")
 
     print("Waiting for home page...")
     WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.ID, "ID_Menu_Print_DirectPrint"))).click()
